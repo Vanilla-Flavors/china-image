@@ -4,7 +4,7 @@ vibversion: 1.1.0
 
 stages:
 - id: build
-  base: ghcr.io/vanilla-os/desktop:dev
+  base: ghcr.io/vanilla-os/gnome:latest
   singlelayer: false
   labels:
     maintainer: lmmqxyx404
