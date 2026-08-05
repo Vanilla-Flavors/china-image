@@ -1,0 +1,5 @@
+name: vso-native
+base: ghcr.io/vanilla-flavors/vso-china:latest
+packages: []
+pkgmanager: apt
+builtin: true
