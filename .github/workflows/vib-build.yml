@@ -29,11 +29,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        arch:
+          - amd64
+          - arm64
+        image_name:
+          - gnome-china
+          - gnome-nvidia-china
+          - gnome-nvidia-modern-china
+          - gnome-vm-china
         include:
           - runner: ubuntu-latest
             arch: amd64
           - runner: ubuntu-24.04-arm
             arch: arm64
+          - base_image: ghcr.io/vanilla-os/gnome
+            image_name: gnome-china
+          - base_image: ghcr.io/vanilla-os/gnome-nvidia
+            image_name: gnome-nvidia-china
+          - base_image: ghcr.io/vanilla-os/gnome-nvidia-modern
+            image_name: gnome-nvidia-modern-china
+          - base_image: ghcr.io/vanilla-os/gnome-vm
+            image_name: gnome-vm-china
     runs-on: ${{ matrix.runner }}
     needs: verify-image
     permissions:
@@ -44,15 +60,17 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
-    - name: Change tag in recipe.
-      if: ${{ github.ref_type != 'tag' }}
+    - name: Change tag and image in recipe and ABRoot
       run: |
-        if [ -n "${{ github.base_ref }}" ]; then
+        if [ "${{ github.ref_type }}" = "tag" ]; then
+          TAG="latest"
+        elif [ -n "${{ github.base_ref }}" ]; then
           TAG="${{ github.base_ref }}"
         else
           TAG="${{ github.ref_name }}"
         fi
-        sed "s/ghcr.io\/vanilla-os\/gnome:latest/ghcr.io\/vanilla-os\/gnome:$TAG/" -i recipe.yml
+        sed -i "s|^  base:.*|  base: ${{ matrix.base_image }}:$TAG|" recipe.yml
+        sed -i 's|"name": ".*"|"name": "vanilla-flavors/${{ matrix.image_name }}"|' includes.container/usr/share/abroot/abroot.json
 
     - uses: vanilla-os/vib-gh-action@v1.1.0
       with:
@@ -68,7 +86,7 @@ jobs:
       run: |
         REPO_OWNER_LOWERCASE="$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')"
         echo "REPO_OWNER_LOWERCASE=$REPO_OWNER_LOWERCASE" >> "$GITHUB_ENV"
-        echo "IMAGE_URL=ghcr.io/$REPO_OWNER_LOWERCASE/gnome-china" >> "$GITHUB_ENV"
+        echo "IMAGE_URL=ghcr.io/$REPO_OWNER_LOWERCASE/${{ matrix.image_name }}" >> "$GITHUB_ENV"
 
     - name: Docker meta
       id: meta
@@ -127,7 +145,7 @@ jobs:
       uses: actions/upload-artifact@v7
       if: ${{ github.event_name != 'pull_request' }}
       with:
-        name: digests-${{ matrix.arch }}
+        name: digests-${{ matrix.image_name }}-${{ matrix.arch }}
         path: ${{ runner.temp }}/digests/*
         if-no-files-found: error
         retention-days: 1
@@ -136,6 +154,14 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name != 'pull_request' }}
     needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        image_name:
+          - gnome-china
+          - gnome-nvidia-china
+          - gnome-nvidia-modern-china
+          - gnome-vm-china
     permissions:
       contents: write # Allow actions to create release
       packages: write # Allow pushing images to GHCR
@@ -145,13 +171,13 @@ jobs:
       run: |
         REPO_OWNER_LOWERCASE="$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')"
         echo "REPO_OWNER_LOWERCASE=$REPO_OWNER_LOWERCASE" >> "$GITHUB_ENV"
-        echo "IMAGE_URL=ghcr.io/$REPO_OWNER_LOWERCASE/gnome-china" >> "$GITHUB_ENV"
+        echo "IMAGE_URL=ghcr.io/$REPO_OWNER_LOWERCASE/${{ matrix.image_name }}" >> "$GITHUB_ENV"
 
     - name: Download digests
       uses: actions/download-artifact@v8
       with:
         path: ${{ runner.temp }}/digests
-        pattern: digests-*
+        pattern: digests-${{ matrix.image_name }}-*
         merge-multiple: true
 
     - name: Extra image tag branch
