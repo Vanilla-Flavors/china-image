@@ -19,7 +19,7 @@ The images are built in parallel based on the following images:
 
 ## Installation
 
-First, download the official ISO image from the [Vanilla OS website](https://vanillaos.org/) or the [TUNA mirror](https://mirrors.tuna.tsinghua.edu.cn/github-release/vanilla-os/live-iso). After downloading, use a USB writer tool to flash the ISO onto a USB drive. Then restart your computer, enter the BIOS/UEFI settings, and set the USB drive as the primary boot device.
+First, download the official ISO image from the [Vanilla OS website](https://vanillaos.org/) or the [TUNA mirror](https://mirrors.tuna.tsinghua.edu.cn/github-release/Vanilla-OS/live-iso). After downloading, use a USB writer tool to flash the ISO onto a USB drive. Then restart your computer, enter the BIOS/UEFI settings, and set the USB drive as the primary boot device.
 
 To install a localized version, select the “Install Custom Image (Advanced)” option during system setup. Then, follow the instructions to configure your language and timezone. When the installer prompts you for the image name, enter one of the following (for example, use the NJU mirror; other mirrors are also available):
 
