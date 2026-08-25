@@ -19,7 +19,7 @@
 
 ## 安装方法
 
-首先，您可以从 [Vanilla OS 官网](https://vanillaos.org/)或[清华大学开源软件镜像站](https://mirrors.tuna.tsinghua.edu.cn/github-release/vanilla-os/live-iso)获取 Vanilla OS 的安装镜像。之后，您需要将安装镜像烧录到 U 盘中，并进入 BIOS/UEFI 设置调整启动顺序，从 U 盘启动计算机。
+首先，您可以从 [Vanilla OS 官网](https://vanillaos.org/)或[清华大学开源软件镜像站](https://mirrors.tuna.tsinghua.edu.cn/github-release/Vanilla-OS/live-iso)获取 Vanilla OS 的安装镜像。之后，您需要将安装镜像烧录到 U 盘中，并进入 BIOS/UEFI 设置调整启动顺序，从 U 盘启动计算机。
 
 要在 Vanilla OS 中使用本地化镜像，请在安装系统时选择“Install Custom Image (Advanced)”选项。之后，按照顺序设置您的语言（以中国大陆为例，选择 Chinese (Simplified)）、时区 (以中国大陆为例，选择 Shanghai)。随后，当提示输入镜像名称时，请输入以下镜像之一（以使用南京大学开源镜像站为例，也可以使用其他 GHCR 镜像）：
 
