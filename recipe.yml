@@ -37,6 +37,7 @@ stages:
   - name: patch-flatpak-first-setup-remote
     type: shell
     commands:
+      - sed -i '/flatpak remote-add --user --if-not-exists flathub/c flatpak remote-add --user --if-not-exists flathub https://mirror.sjtu.edu.cn/flathub/flathub.flatpakrepo' /usr/share/org.vanillaos.FirstSetup/vanilla_first_setup/scripts/setup-flatpak-remote
       - sed -i '/flatpak remote-add --user --if-not-exists flathub/a flatpak remote-modify --user flathub --url=https://mirrors.cernet.edu.cn/flathub' /usr/share/org.vanillaos.FirstSetup/vanilla_first_setup/scripts/setup-flatpak-remote
 
   - name: cleanup
